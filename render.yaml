@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: hackingtool-dashboard
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements-web.txt && pip install .
+    startCommand: uvicorn webapp.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: LOG_LEVEL
+        value: INFO
