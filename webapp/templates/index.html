@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="HackingTool public cybersecurity tool catalog">
+  <title>HackingTool · Security Catalog</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="brand-mark">⌁</span><span>HACKING<span class="accent">TOOL</span><small>SECURITY CATALOG</small></span></a>
+      <nav><a class="nav-link active" href="/">Explore</a><a class="nav-link" href="/api/status">System status</a>{% if is_admin %}<a class="nav-link" href="/admin">Admin</a>{% else %}<a class="nav-link" href="/admin/login">Admin login</a>{% endif %}</nav>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="hero-copy"><div class="eyebrow"><span class="pulse"></span> OPEN-SOURCE SECURITY TOOLKIT</div>
+          <h1>One catalog.<br><span class="gradient">Clearer security work.</span></h1>
+          <p>Explore the HackingTool collection by category, search tool metadata, and review safe-use notes. This public dashboard is a catalog only — it does not run tools against targets.</p>
+          <div class="hero-actions"><a class="btn primary" href="#catalog">Explore catalog <span>↘</span></a><a class="btn secondary" href="https://github.com/riyad12sk/hackingtool" target="_blank" rel="noopener">View source ↗</a></div>
+        </div>
+        <div class="hero-orbit"><div class="orbit-ring ring-one"></div><div class="orbit-ring ring-two"></div><div class="orbit-core"><span>HT</span><small>WEB CONSOLE</small></div><i class="orbit-dot dot-a"></i><i class="orbit-dot dot-b"></i><i class="orbit-dot dot-c"></i></div>
+      </section>
+      <section class="stat-grid" aria-label="Catalog summary">
+        <article class="stat-card"><span class="stat-label">CATALOG ENTRIES</span><strong>{{ total_tools }}</strong><small>Loaded from upstream registry</small></article>
+        <article class="stat-card"><span class="stat-label">CATEGORIES</span><strong>{{ total_categories }}</strong><small>Grouped by original collection</small></article>
+        <article class="stat-card"><span class="stat-label">PLATFORM</span><strong class="stat-word">WEB</strong><small>Responsive public dashboard</small></article>
+        <article class="stat-card"><span class="stat-label">EXECUTION</span><strong class="stat-word safe">DISABLED</strong><small>Metadata-only public mode</small></article>
+      </section>
+      <section class="catalog-section" id="catalog">
+        <div class="section-heading"><div><div class="eyebrow">DISCOVER THE TOOLBOX</div><h2>Tool <span class="gradient">Library</span></h2><p>Search names, descriptions, tags or filter by category.</p></div><div class="result-count"><strong id="visible-count">{{ total_tools }}</strong><span>RESULTS</span></div></div>
+        <div class="filters"><label class="search-box"><span>⌕</span><input id="tool-search" type="search" placeholder="Search tools, tags, descriptions…" autocomplete="off"></label><select id="category-filter" aria-label="Filter category"><option value="">All categories</option>{% for category in categories.keys()|sort %}<option value="{{ category }}">{{ category }}</option>{% endfor %}</select></div>
+        <div class="category-chips" id="category-chips"><button class="chip selected" data-category="">All</button>{% for category in categories.keys()|sort %}<button class="chip" data-category="{{ category }}">{{ category }}</button>{% endfor %}</div>
+        <div class="tool-grid" id="tool-grid">
+          {% for tool in tools %}
+          <article class="tool-card" data-title="{{ tool.title|lower }}" data-category="{{ tool.category }}" data-search="{{ (tool.title ~ ' ' ~ tool.description ~ ' ' ~ tool.category ~ ' ' ~ (tool.tags|join(' ')))|lower }}">
+            <div class="tool-card-top"><span class="tool-icon">{{ tool.icon }}</span><span class="kind-pill">{{ 'RESOURCE' if tool.kind == 'resource' else 'TOOL' }}</span>{% if tool.archived %}<span class="archived-pill">ARCHIVED</span>{% endif %}</div>
+            <h3>{{ tool.title }}</h3><p class="tool-description">{{ tool.description or 'No description provided in the catalog.' }}</p>
+            <div class="tag-list">{% for tag in tool.tags[:4] %}<span class="tag">{{ tag }}</span>{% endfor %}</div>
+            {% if tool.lab_safe_notes %}<details class="safe-note"><summary>Safe-use notes</summary><p>{{ tool.lab_safe_notes }}</p></details>{% endif %}
+            <div class="tool-card-footer"><span>{{ tool.category_label }}</span>{% if tool.project_url %}<a href="{{ tool.project_url }}" target="_blank" rel="noopener">Project ↗</a>{% else %}<span class="muted">No project link</span>{% endif %}</div>
+          </article>
+          {% endfor %}
+        </div>
+        <div class="empty-state" id="empty-state" hidden><strong>No matching tools</strong><span>Try another search term or category.</span></div>
+      </section>
+    </main>
+    <footer><span>HACKINGTOOL WEB · PUBLIC CATALOG</span><span>For authorized security learning and testing only.</span><a href="https://github.com/riyad12sk/hackingtool" target="_blank" rel="noopener">GitHub ↗</a></footer>
+  </div>
+</body>
+</html>
